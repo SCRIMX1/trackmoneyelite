@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Track Money Final</title>
+<style>
+:root{--bg:#08130d;--card:#102118;--green:#22e67b;--txt:#fff}
+body{font-family:-apple-system,sans-serif;background:linear-gradient(180deg,#08130d,#102118);color:#fff;max-width:430px;margin:auto;padding:18px;min-height:100vh}
+.hero{background:linear-gradient(135deg,#22e67b,#12b95f);padding:22px;border-radius:22px;color:#03210f}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.card{background:#102118;padding:14px;border-radius:18px;margin:10px 0}
+input,select,button{width:100%;padding:12px;border-radius:12px;border:none;margin:6px 0}
+button{background:#22e67b;color:#03210f;font-weight:700}
+.item{display:flex;justify-content:space-between;background:#102118;padding:12px;border-radius:14px;margin:8px 0}
+.nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#0d1d15;padding:10px;border-radius:20px}
+canvas{background:#102118;border-radius:18px;width:100%}
+</style>
+</head>
+<body>
+<h1>Track Money</h1>
+<select id="cur" onchange="render()"><option value="NT$">NTD</option><option value="Rp">IDR</option></select>
+<div class="hero"><div>Total Saldo</div><h2 id="bal">0</h2></div>
+<div class="grid">
+<div class="card">Income<br><b id="inc">0</b></div>
+<div class="card">Expense<br><b id="exp">0</b></div>
+</div>
+
+<div class="card">
+<h3>Tambah</h3>
+<select id="type"><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select>
+<input id="desc" placeholder="Keterangan">
+<input id="amt" type="number" placeholder="Jumlah">
+<button onclick="addTx()">Simpan</button>
+</div>
+
+<div class="card">
+<h3>Statistik</h3>
+<canvas id="cv" width="360" height="180"></canvas>
+</div>
+
+<div class="card">
+<h3>Riwayat</h3>
+<div id="list"></div>
+</div>
+
+<script>
+let db=JSON.parse(localStorage.getItem('tm5')||'[]');
+const $=id=>document.getElementById(id);
+function money(n){return $('cur').value+' '+Number(n).toLocaleString('en-US')}
+function save(){localStorage.setItem('tm5',JSON.stringify(db));render();}
+function addTx(){
+ let d=$('desc').value.trim(),a=parseFloat($('amt').value),t=$('type').value;
+ if(!d||!a)return;
+ db.unshift({id:Date.now(),desc:d,amt:a,type:t,date:new Date().toLocaleDateString()});
+ $('desc').value='';$('amt').value='';save();
+}
+function delTx(id){db=db.filter(x=>x.id!==id);save();}
+function render(){
+ let inc=0,exp=0,html='';
+ db.forEach(x=>{
+   if(x.type==='income')inc+=x.amt; else exp+=x.amt;
+   html+=`<div class="item"><span>${x.desc}</span><span>${x.type==='income'?'+':'-'} ${money(x.amt)} <button onclick="delTx(${x.id})">x</button></span></div>`;
+ });
+ $('inc').textContent=money(inc); $('exp').textContent=money(exp); $('bal').textContent=money(inc-exp);
+ $('list').innerHTML=html||'Belum ada transaksi';
+ chart(inc,exp);
+}
+function chart(inc,exp){
+ let c=$('cv'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);
+ let max=Math.max(inc,exp,1),base=150;
+ let hi=inc/max*110, he=exp/max*110;
+ x.fillStyle='#22e67b';x.fillRect(70,base-hi,80,hi);
+ x.fillStyle='#ff6b6b';x.fillRect(210,base-he,80,he);
+ x.fillStyle='#fff';x.fillText('Income',78,170);x.fillText('Expense',214,170);
+}
+render();
+</script>
+</body></html>
