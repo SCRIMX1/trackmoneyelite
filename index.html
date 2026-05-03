@@ -1,109 +1,78 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Track Money V8 Ultra Elite</title>
+<title>Track Money Final</title>
 <style>
-:root{--bg:#050b08;--panel:#0a1510;--card:#0f1f17;--line:#183025;--txt:#eef6f0;--muted:#8ea698;--g1:#1fd56f;--g2:#119c52}
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif}
-body{background:linear-gradient(180deg,#050b08,#0a1510);color:var(--txt)}
-.wrap{max-width:430px;margin:auto;min-height:100vh;padding:18px 16px 100px}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+:root{--bg:#07110d;--bg2:#0b1812;--card:#101f18;--line:#1a3427;--txt:#eef7f1;--muted:#8aa393;--green:#22d36f}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,-apple-system,sans-serif}
+body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--txt)}
+.wrap{max-width:430px;margin:auto;min-height:100vh;padding:18px 16px 95px}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.brand{font-size:30px;font-weight:800}.elite{color:#1fd56f}.sub{font-size:12px;color:var(--muted)}
+.brand{font-size:28px;font-weight:800}.elite{color:var(--green)}
 select,input,button{width:100%;padding:14px;border-radius:16px;border:none}
-select,input{background:#102118;color:#fff;border:1px solid var(--line)}
-.hero{background:linear-gradient(135deg,var(--g2),#0d6f3d);padding:22px;border-radius:26px}
-.bal{font-size:38px;font-weight:900;margin-top:8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.card{background:var(--card);border:1px solid var(--line);padding:16px;border-radius:22px}
-.label{font-size:13px;color:var(--muted)} .val{font-size:22px;font-weight:800;margin-top:8px}
+select,input{background:#0d1a14;color:#fff;border:1px solid var(--line)}
+.hero{background:linear-gradient(135deg,#1dbd63,#0e7f44);padding:22px;border-radius:24px;animation:up .5s}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bal{font-size:38px;font-weight:800;margin-top:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.card{background:var(--card);border:1px solid var(--line);padding:15px;border-radius:20px}
 .page{display:none}.page.active{display:block}
-.sec{margin-top:18px}.sec h3{margin-bottom:10px}
-.btn{background:linear-gradient(135deg,var(--g1),var(--g2));font-weight:800;color:#03210f}
-.item{display:flex;justify-content:space-between;gap:8px;background:var(--card);border:1px solid var(--line);padding:14px;border-radius:18px;margin:8px 0}
-.meta{font-size:12px;color:var(--muted)}
-.nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:430px;background:#08150f;border:1px solid var(--line);padding:10px;border-radius:26px;display:flex;justify-content:space-around}
-.nav button{background:none;color:#fff;border:none;font-size:12px;width:auto;padding:8px}
-canvas{width:100%;background:#0c1a13;border-radius:18px}
-.small{font-size:12px;color:var(--muted)}
-</style></head>
-<body><div class="wrap">
-<div class="top">
-<div><div class="brand">Track Money <span class="elite">Elite</span></div><div class="sub">Finance Premium Personal App</div></div>
-<select id="wallet" style="width:120px" onchange="render()"><option value="NTD">NTD</option><option value="IDR">IDR</option></select>
-</div>
+.muted{font-size:12px;color:var(--muted)}
+.value{font-size:22px;font-weight:700;margin-top:6px}
+.sec{margin-top:16px}
+.item{display:flex;justify-content:space-between;gap:10px;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;margin:8px 0}
+.actions button{width:auto;padding:6px 10px;border-radius:10px;font-size:12px}
+.btn{background:linear-gradient(135deg,#22d36f,#129953);color:#04170c;font-weight:800}
+.nav{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);max-width:430px;width:calc(100% - 24px);display:flex;justify-content:space-around;background:#09150f;border:1px solid var(--line);padding:10px;border-radius:24px}
+.nav button{background:none;color:#fff;width:auto;padding:8px 10px;font-size:12px}
+canvas{width:100%;background:#0c1712;border-radius:18px;margin-top:10px}
+</style></head><body><div class="wrap">
+<div class="top"><div class="brand">Track Money <span class="elite">Elite</span></div>
+<select id="wallet" style="width:120px" onchange="render()"><option value="NTD">NTD</option><option value="IDR">IDR</option></select></div>
 
 <div id="home" class="page active">
-<div class="hero"><div class="small">Total Saldo</div><div class="bal" id="bal">0</div></div>
+<div class="hero"><div class="muted">Total Saldo</div><div id="bal" class="bal">0</div></div>
 <div class="grid">
-<div class="card"><div class="label">Income</div><div class="val" id="inc">0</div></div>
-<div class="card"><div class="label">Expense</div><div class="val" id="exp">0</div></div>
+<div class="card"><div class="muted">Income</div><div id="inc" class="value">0</div></div>
+<div class="card"><div class="muted">Expense</div><div id="exp" class="value">0</div></div>
 </div>
-<div class="sec card"><h3>Quick Add</h3>
+<div class="sec card">
+<div class="muted">Tambah Transaksi</div><br>
 <select id="type"><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select><br><br>
 <input id="desc" placeholder="Keterangan"><br><br>
 <input id="amt" type="number" placeholder="Jumlah"><br><br>
-<button class="btn" onclick="addTx()">Simpan Transaksi</button>
-</div>
-</div>
-
-<div id="stats" class="page">
-<div class="sec card"><h3>Rekap Bulanan</h3><div class="small">Wallet aktif: <span id="walletName"></span></div><br>
-<canvas id="cv" width="360" height="180"></canvas></div>
-</div>
-
-<div id="history" class="page"><div class="sec"><h3>Riwayat</h3><div id="list"></div></div></div>
-
-<div id="settings" class="page">
-<div class="sec card"><h3>Elite Settings</h3>
-<button class="btn" onclick="backupData()">Backup Data</button><br><br>
-<button class="btn" onclick="resetData()">Reset Wallet (dengan backup)</button>
+<button class="btn" onclick="addTx()">Simpan</button>
 </div></div>
 
+<div id="stats" class="page"><div class="card"><div class="muted">Rekap Bulanan</div><canvas id="cv" width="360" height="180"></canvas></div></div>
+<div id="history" class="page"><div id="list"></div></div>
+<div id="settings" class="page"><div class="card"><button class="btn" onclick="backup()">Backup JSON</button><br><br><button class="btn" onclick="resetWallet()">Reset Wallet</button></div></div>
 </div>
 
 <div class="nav">
-<button onclick="show('home')">Home</button>
-<button onclick="show('stats')">Stats</button>
-<button onclick="show('history')">History</button>
-<button onclick="show('settings')">Elite</button>
+<button onclick="showp('home')">Home</button>
+<button onclick="showp('stats')">Stats</button>
+<button onclick="showp('history')">History</button>
+<button onclick="showp('settings')">Settings</button>
 </div>
 
 <script>
-let db=JSON.parse(localStorage.getItem('tm_v8')||'{"NTD":[],"IDR":[],"backup":null}');
+let db=JSON.parse(localStorage.getItem('tm_final')||'{"NTD":[],"IDR":[]}');
 const $=id=>document.getElementById(id);
 function cur(){return $('wallet').value}
 function sym(){return cur()==='NTD'?'NT$':'Rp'}
 function money(n){return sym()+' '+Number(n).toLocaleString('en-US')}
-function save(){localStorage.setItem('tm_v8',JSON.stringify(db));render()}
-function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active')}
-function addTx(){
- let d=$('desc').value.trim(),a=parseFloat($('amt').value),t=$('type').value;
- if(!d||!a)return alert('Isi data');
- db[cur()].unshift({id:Date.now(),desc:d,amt:a,type:t,date:new Date().toLocaleDateString()});
- $('desc').value='';$('amt').value='';save();
-}
+function save(){localStorage.setItem('tm_final',JSON.stringify(db));render()}
+function showp(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');render()}
+function addTx(){let d=$('desc').value.trim(),a=parseFloat($('amt').value),t=$('type').value;if(!d||!a)return;
+db[cur()].unshift({id:Date.now(),desc:d,amt:a,type:t,date:new Date().toLocaleDateString()});$('desc').value='';$('amt').value='';save();}
 function delTx(id){db[cur()]=db[cur()].filter(x=>x.id!==id);save()}
-function editTx(id){
- let t=db[cur()].find(x=>x.id===id); if(!t)return;
- let d=prompt('Edit keterangan',t.desc); if(d===null)return;
- let a=prompt('Edit jumlah',t.amt); if(a===null)return;
- t.desc=d; t.amt=parseFloat(a)||t.amt; save();
-}
-function backupData(){db.backup=JSON.parse(JSON.stringify(db[cur()]));save();alert('Backup wallet tersimpan')}
-function resetData(){if(confirm('Reset wallet ini? Backup otomatis dibuat')){db.backup=JSON.parse(JSON.stringify(db[cur()]));db[cur()]=[];save();}}
-function render(){
- let arr=db[cur()],inc=0,exp=0,html='';
- arr.forEach(x=>{if(x.type==='income')inc+=x.amt;else exp+=x.amt;
- html+=`<div class=item><div><div>${x.desc}</div><div class=meta>${x.date}</div></div><div>${x.type==='income'?'+':'-'} ${money(x.amt)} <button onclick="editTx(${x.id})">E</button> <button onclick="delTx(${x.id})">X</button></div></div>`});
- $('inc').textContent=money(inc); $('exp').textContent=money(exp); $('bal').textContent=money(inc-exp); $('walletName').textContent=cur();
- $('list').innerHTML=html||'<div class="card">Belum ada transaksi</div>';
- chart(arr);
-}
-function chart(arr){
- let c=$('cv'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);
- let monthly=[0,0,0,0,0,0];
- arr.slice(0,6).forEach((v,i)=>monthly[i]=v.amt);
- let max=Math.max(...monthly,1);
- monthly.forEach((v,i)=>{let h=v/max*120;x.fillStyle='#1fd56f';x.fillRect(20+i*55,150-h,30,h);x.fillStyle='#fff';x.fillText(i+1,30+i*55,170);});
-}
+function editTx(id){let t=db[cur()].find(x=>x.id===id);if(!t)return;let d=prompt('Keterangan',t.desc);if(d===null)return;let a=prompt('Jumlah',t.amt);if(a===null)return;t.desc=d;t.amt=parseFloat(a)||t.amt;save();}
+function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trackmoney-backup.json';a.click();}
+function resetWallet(){if(confirm('Reset wallet ini?')){db[cur()]=[];save();}}
+function chart(arr){let c=$('cv'),x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let vals=[0,0,0,0,0,0];arr.slice(0,6).forEach((v,i)=>vals[i]=v.amt);let m=Math.max(...vals,1);vals.forEach((v,i)=>{let h=v/m*120;x.fillStyle='#22d36f';x.fillRect(20+i*55,150-h,26,h);});}
+function render(){let arr=db[cur()],inc=0,exp=0,h='';arr.forEach(v=>{if(v.type==='income')inc+=v.amt;else exp+=v.amt;
+h+=`<div class=item><div><div>${v.desc}</div><div class=muted>${v.date}</div></div><div><div>${v.type==='income'?'+':'-'} ${money(v.amt)}</div><div class=actions><button onclick="editTx(${v.id})">Edit</button> <button onclick="delTx(${v.id})">Del</button></div></div></div>`});
+$('inc').textContent=money(inc);$('exp').textContent=money(exp);$('bal').textContent=money(inc-exp);$('list').innerHTML=h||'<div class="card">Belum ada transaksi</div>';chart(arr);}
 render();
 </script></body></html>
