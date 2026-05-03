@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Track Money V6 WOW</title>
+<title>Track Money Elite</title>
 <style>
-:root{--bg:#07110d;--card:rgba(255,255,255,.08);--line:#1e3b2a;--txt:#fff;--muted:#9fb8aa;--g1:#2cff8a;--g2:#10b85d}
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
-body{background:radial-gradient(circle at top,#123,#07110d 45%);color:var(--txt)}
+:root{--bg:#07110d;--panel:#0d1b14;--card:rgba(255,255,255,.08);--line:#1f3a2a;--txt:#fff;--muted:#9fb8aa;--g1:#2cff8a;--g2:#10b85d}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif}
+body{background:linear-gradient(180deg,#07110d,#0e1d16);color:var(--txt)}
 .wrap{max-width:430px;margin:auto;min-height:100vh;padding:18px 16px 100px}
+.brand{font-size:28px;font-weight:800;letter-spacing:.3px}
+.sub{font-size:12px;color:var(--muted);margin-top:4px}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-h1{font-size:30px}.sub{color:var(--muted);font-size:13px}
 select,input,button{width:100%;padding:14px;border-radius:16px;border:none}
 select,input{background:#102118;color:#fff;border:1px solid var(--line)}
 .hero{background:linear-gradient(135deg,var(--g1),var(--g2));padding:24px;border-radius:28px;box-shadow:0 25px 45px rgba(0,0,0,.35)}
@@ -15,40 +16,58 @@ select,input{background:#102118;color:#fff;border:1px solid var(--line)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--line);padding:16px;border-radius:22px}
 .label{font-size:13px;color:var(--muted)} .val{font-size:22px;font-weight:800;margin-top:8px}
+.page{display:none}.page.active{display:block}
 .sec{margin-top:18px}.sec h3{margin-bottom:10px}
 .btn{background:linear-gradient(135deg,var(--g1),var(--g2));font-weight:800;color:#03210f}
 .item{display:flex;justify-content:space-between;gap:8px;background:var(--card);border:1px solid var(--line);padding:14px;border-radius:18px;margin:8px 0}
 .meta{font-size:12px;color:var(--muted)}
 .nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:430px;background:#08150f;border:1px solid var(--line);padding:10px;border-radius:26px;display:flex;justify-content:space-around}
+.nav button{background:none;color:#fff;border:none;font-size:12px;width:auto;padding:8px}
+.logo{font-weight:800;color:#2cff8a}
 </style></head>
 <body><div class="wrap">
-<div class="top"><div><h1>Track Money</h1><div class="sub">WOW Dual Wallet</div></div>
-<select id="wallet" style="width:120px" onchange="render()"><option value="NTD">NTD</option><option value="IDR">IDR</option></select></div>
+<div class="top">
+<div><div class="brand">Track Money <span class="logo">Elite</span></div><div class="sub">Premium Finance Personal App</div></div>
+<select id="wallet" style="width:120px" onchange="render()"><option value="NTD">NTD</option><option value="IDR">IDR</option></select>
+</div>
 
-<div class="hero"><div class="small">Total Saldo Wallet</div><div class="bal" id="bal">0</div></div>
-
+<div id="home" class="page active">
+<div class="hero"><div class="small">Total Saldo</div><div class="bal" id="bal">0</div></div>
 <div class="grid">
 <div class="card"><div class="label">Income</div><div class="val" id="inc">0</div></div>
 <div class="card"><div class="label">Expense</div><div class="val" id="exp">0</div></div>
 </div>
-
-<div class="sec card"><h3>Tambah Transaksi</h3>
+<div class="sec card"><h3>Quick Add</h3>
 <select id="type"><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select><br><br>
 <input id="desc" placeholder="Keterangan"><br><br>
 <input id="amt" type="number" placeholder="Jumlah"><br><br>
-<button class="btn" onclick="addTx()">Simpan</button></div>
-
-<div class="sec"><h3>Riwayat Wallet</h3><div id="list"></div></div>
+<button class="btn" onclick="addTx()">Simpan</button>
 </div>
-<div class="nav"><div>Home</div><div>Stats</div><div>Wallet</div><div>History</div></div>
+</div>
+
+<div id="stats" class="page"><div class="sec card"><h3>Stats</h3><p>Total transaksi wallet ini: <span id="count"></span></p></div></div>
+
+<div id="history" class="page"><div class="sec"><h3>Riwayat</h3><div id="list"></div></div></div>
+
+<div id="settings" class="page"><div class="sec card"><h3>Settings</h3><button class="btn" onclick="resetData()">Reset Wallet Ini</button></div></div>
+
+</div>
+
+<div class="nav">
+<button onclick="show('home')">Home</button>
+<button onclick="show('stats')">Stats</button>
+<button onclick="show('history')">History</button>
+<button onclick="show('settings')">Elite</button>
+</div>
 
 <script>
-let db=JSON.parse(localStorage.getItem('tm_v6')||'{"NTD":[],"IDR":[]}');
+let db=JSON.parse(localStorage.getItem('tm_v7')||'{"NTD":[],"IDR":[]}');
 const $=id=>document.getElementById(id);
 function cur(){return $('wallet').value}
 function sym(){return cur()==='NTD'?'NT$':'Rp'}
 function money(n){return sym()+' '+Number(n).toLocaleString('en-US')}
-function save(){localStorage.setItem('tm_v6',JSON.stringify(db));render()}
+function save(){localStorage.setItem('tm_v7',JSON.stringify(db));render()}
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active')}
 function addTx(){
  let d=$('desc').value.trim(),a=parseFloat($('amt').value),t=$('type').value;
  if(!d||!a)return alert('Isi data');
@@ -56,12 +75,14 @@ function addTx(){
  $('desc').value='';$('amt').value='';save();
 }
 function delTx(id){db[cur()]=db[cur()].filter(x=>x.id!==id);save()}
+function resetData(){db[cur()]=[];save()}
 function render(){
  let arr=db[cur()],inc=0,exp=0,html='';
  arr.forEach(x=>{if(x.type==='income')inc+=x.amt;else exp+=x.amt;
  html+=`<div class=item><div><div>${x.desc}</div><div class=meta>${x.date}</div></div><div>${x.type==='income'?'+':'-'} ${money(x.amt)} <button onclick="delTx(${x.id})">x</button></div></div>`});
  $('inc').textContent=money(inc); $('exp').textContent=money(exp); $('bal').textContent=money(inc-exp);
- $('list').innerHTML=html||'<div class="card">Belum ada transaksi di wallet ini</div>';
+ $('count').textContent=arr.length;
+ $('list').innerHTML=html||'<div class="card">Belum ada transaksi</div>';
 }
 render();
 </script></body></html>
